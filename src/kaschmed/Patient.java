@@ -12,15 +12,13 @@ package kaschmed;
 class Patient {
     String vorname;
     String nachname;
-    int iD;
-    int telefonNr;
-    int sVN;
+    long telefonNr;
+    long sVN;
     String geschlecht;
 
-    public Patient(String vorname, String nachname, int iD, int telefonNr, int sVN, String geschlecht) {
+    public Patient(String vorname, String nachname, long telefonNr, long sVN, String geschlecht) {
         this.vorname = vorname;
-        this.nachname = nachname;
-        this.iD = iD;
+        this.nachname = nachname;       
         this.telefonNr = telefonNr;
         this.sVN = sVN;
         this.geschlecht = geschlecht;
@@ -34,15 +32,11 @@ class Patient {
         return nachname;
     }
 
-    public int getiD() {
-        return iD;
-    }
-
-    public int getTelefonNr() {
+    public long getTelefonNr() {
         return telefonNr;
     }
 
-    public int getsVN() {
+    public long getsVN() {
         return sVN;
     }
 

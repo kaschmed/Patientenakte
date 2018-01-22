@@ -5,8 +5,11 @@
  */
 package kaschmed;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,20 +18,26 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SpringLayout;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.TableModel;
 
 /**
  *
  * @author Francesca Kaschnig
  */
 public class Benutzeroberflaeche extends javax.swing.JDialog {
-    
-    BildAnzeige anzeige = new BildAnzeige();
-    
 
     java.awt.Frame parent;
+    InputStreamReader streamReader;
+    private final JFileChooser openFileChooser;
+    private BufferedImage originalBI;
 
     /**
      * Creates new form Benutzeroberflaeche
@@ -38,47 +47,68 @@ public class Benutzeroberflaeche extends javax.swing.JDialog {
         this.parent = parent;
         initComponents();
         showUser();
+        streamReader = new InputStreamReader(System.in);
+        openFileChooser = new JFileChooser();
+        openFileChooser.setCurrentDirectory(new File("c:\\"));
+        openFileChooser.setFileFilter(new FileNameExtensionFilter("JPG PNG GIF Images", "jpg", "bmp", "gif", "png"));
     }
 
-    Benutzeroberflaeche() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    public ArrayList<Patient> userList(){
-     ArrayList<Patient> patientList = new ArrayList<>();
+    public ArrayList<Patient> userList() {
+        ArrayList<Patient> patientList = new ArrayList<>();
 //     Connection con = null;
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-          String url = ("jdbc:mysql://localhost:3306/patientenliste?"
+//            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = ("jdbc:mysql://localhost:3306/patientenliste?"
                     + "user=root&password=root");
-             Connection con = DriverManager.getConnection(url);
-             String query1 = "SELECT * pFROM patientenliste";
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(query1);
-             Patient pat;
-             while(rs.next()){
-                 pat = new Patient(rs.getString("vornamen"),rs.getString("nachname"),rs.getInt("idPatient"),rs.getInt("Telefonnummer"),rs.getInt("SVN"),rs.getString("Geschlecht"));
-                 patientList.add(pat);
-             }
+            Connection con = DriverManager.getConnection(url);
+            String query1 = "SELECT * FROM patienten";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            Patient pat;
+            while (rs.next()) {
+                pat = new Patient(rs.getString("Vornamen"), rs.getString("Nachname"), rs.getLong("Telefonnummer"), rs.getLong("SVN"), rs.getString("Geschlecht"));
+                patientList.add(pat);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         return patientList;
     }
-    public void showUser(){
+
+    public void showUser() {
         ArrayList<Patient> list = userList();
-DefaultTableModel model = (DefaultTableModel)workBench.getModel();
-Object[] row = new Object [6];
-for(int i = 0; i< list.size();i++){
-    row[0]= list.get(i).getiD();
-    row [1] = list.get(i).getVorname();
-    row [2] = list.get(i).getNachname();
-    row [3] = list.get(i).getsVN();
-    row [4] = list.get(i).getGeschlecht();
-    row [5] = list.get(i).getTelefonNr();
-    model.addRow(row);
-}
+        DefaultTableModel model = (DefaultTableModel) workBench.getModel();
+        Object[] row = new Object[5];
+        for (int i = 0; i < list.size(); i++) {
+
+            row[0] = list.get(i).getVorname();
+            row[1] = list.get(i).getNachname();
+            row[2] = list.get(i).getsVN();
+            row[3] = list.get(i).getGeschlecht();
+            row[4] = list.get(i).getTelefonNr();
+            model.addRow(row);
+        }
+    }
+
+    public void executeSQLQuery(String query, String message) throws SQLException {
+        String url = ("jdbc:mysql://localhost:3306/patientenliste?"
+                + "user=root&password=root");
+        Connection con = DriverManager.getConnection(url);
+        Statement st;
+        try {
+            st = con.createStatement();
+            if ((st.executeUpdate(query))==0) {
+                JOptionPane.showMessageDialog(null, "Data " + message + "Successfully");
+            } else {
+                JOptionPane.showMessageDialog(null, "Data Not " + message);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -91,13 +121,25 @@ for(int i = 0; i< list.size();i++){
     private void initComponents() {
 
         jInternalFrame1 = new javax.swing.JInternalFrame();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         workBench = new javax.swing.JTable();
         edit = new javax.swing.JButton();
         delete = new javax.swing.JButton();
         newPat = new javax.swing.JButton();
-        save = new javax.swing.JButton();
         connect = new javax.swing.JButton();
+        save = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        zuVN = new javax.swing.JTextField();
+        zuNN = new javax.swing.JTextField();
+        zuSVN = new javax.swing.JTextField();
+        zuGeschl = new javax.swing.JTextField();
+        zuTele = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         options = new javax.swing.JMenu();
         saveAs = new javax.swing.JMenuItem();
@@ -124,6 +166,9 @@ for(int i = 0; i< list.size();i++){
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setName(""); // NOI18N
 
         workBench.setModel(new javax.swing.table.DefaultTableModel(
@@ -131,18 +176,27 @@ for(int i = 0; i< list.size();i++){
 
             },
             new String [] {
-                "ID", "Vorame", "Nachname", "SVN", "Telefonnummer", "Geschlecht"
+                "Vorname", "Nachname", "SVN", "Telefonnummer", "Geschlecht"
             }
         ));
+        workBench.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                workBenchMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(workBench);
 
-        edit.setText("Edit...");
+        edit.setBackground(java.awt.SystemColor.textHighlight);
+        edit.setForeground(new java.awt.Color(255, 255, 255));
+        edit.setText("Update...");
         edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editActionPerformed(evt);
             }
         });
 
+        delete.setBackground(java.awt.SystemColor.textHighlight);
+        delete.setForeground(new java.awt.Color(255, 255, 255));
         delete.setText("Delete...");
         delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,6 +204,8 @@ for(int i = 0; i< list.size();i++){
             }
         });
 
+        newPat.setBackground(java.awt.SystemColor.textHighlight);
+        newPat.setForeground(new java.awt.Color(255, 255, 255));
         newPat.setText("New...");
         newPat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -157,14 +213,131 @@ for(int i = 0; i< list.size();i++){
             }
         });
 
-        save.setText("Save");
-
+        connect.setBackground(java.awt.SystemColor.textHighlight);
+        connect.setForeground(new java.awt.Color(255, 255, 255));
         connect.setText("Connect...");
         connect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connectActionPerformed(evt);
             }
         });
+
+        save.setBackground(java.awt.SystemColor.textHighlight);
+        save.setForeground(new java.awt.Color(255, 255, 255));
+        save.setText("Save");
+
+        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("textHighlight"));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Save...");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Vorname:");
+
+        jLabel3.setText("Nachname:");
+
+        jLabel4.setText("SVN:");
+
+        jLabel5.setText("Telefonnummer:");
+
+        jLabel6.setText("Geschlecht:");
+
+        zuVN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zuVNActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(connect, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(106, 106, 106)
+                        .addComponent(newPat, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(137, 137, 137)
+                        .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(57, 57, 57)
+                                .addComponent(zuGeschl, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(zuNN, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel2))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(35, 35, 35)
+                                        .addComponent(zuVN, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(zuSVN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(zuTele, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(zuVN, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(zuNN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(zuSVN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(zuTele, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(zuGeschl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(edit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(connect, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(newPat, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7))
+        );
+
+        jMenuBar1.setBackground(new java.awt.Color(204, 204, 204));
 
         options.setText("Options");
 
@@ -212,36 +385,13 @@ for(int i = 0; i< list.size();i++){
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(edit)
-                        .addGap(29, 29, 29)
-                        .addComponent(delete)
-                        .addGap(31, 31, 31)
-                        .addComponent(newPat)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                        .addComponent(connect))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(save)))
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edit)
-                    .addComponent(delete)
-                    .addComponent(newPat)
-                    .addComponent(connect))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(save)
+                .addGap(26, 26, 26)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -274,15 +424,15 @@ for(int i = 0; i< list.size();i++){
 
     private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
         // TODO add your handling code here:
-       Connection con = null;
+        Connection con = null;
         try {
-             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/patientenliste?"
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/patientenliste?"
                     + "user=root&password=root");
-            JOptionPane.showMessageDialog(null,"Verbindung erfolgreich hergestellt!");
+            JOptionPane.showMessageDialog(null, "Verbindung erfolgreich hergestellt!");
 
         } catch (SQLException ex) {
             Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null,"Verbindung fehlgeschlagen!");
+            JOptionPane.showMessageDialog(null, "Verbindung fehlgeschlagen!");
         }
         Statement meinStmt = null;
         try {
@@ -290,35 +440,81 @@ for(int i = 0; i< list.size();i++){
 
         } catch (SQLException ex) {
             Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
-        }try{
+        }
+        try {
             String query = "select * from patientenliste";
-            ResultSet myrs = meinStmt.executeQuery("select * from patientenliste");
-            while(myrs.next()){
-                
-               String bez = (myrs.getString("idPatienten")+", "+ myrs.getString("Vornamen")+", "+myrs.getString("Nachnamen")+", "+myrs.getString("Vorname")+", "+myrs.getString("SVN")+ ", "+myrs.getString("Geschlecht"));
+            ResultSet myrs = meinStmt.executeQuery("select * from patienten");
+            while (myrs.next()) {
+
+                String bez = (myrs.getString("Vornamen") + ", " + myrs.getString("Nachname") + ", " + myrs.getString("SVN") + ", " + myrs.getString("Geschlecht") + ", " + myrs.getString("Telefonnummer"));
             }
-            
-        }catch(SQLException ex){
+
+        } catch (SQLException ex) {
             Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_connectActionPerformed
 
     private void openPicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPicActionPerformed
-       InputStreamReader  reader = new InputStreamReader(System.in);
-        try {
-            int letters = reader.read();
-         
-       while(reader.ready()){
-           letters = reader.read();
-           
-           reader.close();
-       
-       }
-        }catch (IOException ex) {
-            Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
-               }
+        // TODO add your handling code here:
+        int returnValue = openFileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                originalBI = ImageIO.read(openFileChooser.getSelectedFile());
+                // String cad = openFileChooser.getCurrentDirectory() + "/" + openFileChooser.getSelectedFile().getName();
+                //beenden.addTab(openFileChooser.getSelectedFile().getName(), new JLabel(new ImageIcon(originalBI)));
+
+            } catch (IOException ioe) {
+            }
+
+        } else {
+        }
     }//GEN-LAST:event_openPicActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            String query = "UPDATE patient set Nachname =" + zuNN.getText() + "SVN =" + zuSVN.getText() + "Telefonnummer=" + zuTele.getText() + "Geschlecht =" + zuGeschl.getText() + "where 1 Vorname = " + zuVN.getText();
+            executeSQLQuery(query, "Updated");
+        } catch (SQLException ex) {
+            Logger.getLogger(Benutzeroberflaeche.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void zuVNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zuVNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_zuVNActionPerformed
+
+    private void workBenchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workBenchMouseClicked
+        // TODO add your handling code here:
+        int i = workBench.getSelectedRow();
+        TableModel model = workBench.getModel();
+        zuVN.setText(model.getValueAt(i, 0).toString());
+        zuNN.setText(model.getValueAt(i, 1).toString());
+        zuSVN.setText(model.getValueAt(i, 2).toString());
+        zuTele.setText(model.getValueAt(i, 3).toString());
+        zuGeschl.setText(model.getValueAt(i, 4).toString());
+    }//GEN-LAST:event_workBenchMouseClicked
+    public void executeSQLQuery1(String query, String message) throws SQLException {
+
+        String url = ("jdbc:mysql://localhost:3306/patientenliste?"
+                + "user=root&password=root");
+        Connection con = DriverManager.getConnection(url);
+        Statement st;
+        try {
+            st = con.createStatement();
+            if ((st.executeUpdate(query)) == 1) {
+                JOptionPane.showMessageDialog(null, "Data " + message + "Successfully");
+            } else {
+                JOptionPane.showMessageDialog(null, "Data Not " + message);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -371,8 +567,15 @@ for(int i = 0; i< list.size();i++){
     private javax.swing.JMenuItem exitOption;
     private javax.swing.JMenu help;
     private javax.swing.JMenuItem instructions;
+    private javax.swing.JButton jButton1;
     private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton newPat;
     private javax.swing.JMenuItem openPic;
@@ -381,5 +584,10 @@ for(int i = 0; i< list.size();i++){
     private javax.swing.JButton save;
     private javax.swing.JMenuItem saveAs;
     private javax.swing.JTable workBench;
+    private javax.swing.JTextField zuGeschl;
+    private javax.swing.JTextField zuNN;
+    private javax.swing.JTextField zuSVN;
+    private javax.swing.JTextField zuTele;
+    private javax.swing.JTextField zuVN;
     // End of variables declaration//GEN-END:variables
 }

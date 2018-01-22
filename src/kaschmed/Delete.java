@@ -5,6 +5,12 @@
  */
 package kaschmed;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Francesca Kaschnig
@@ -29,10 +35,8 @@ public class Delete extends javax.swing.JDialog {
     private void initComponents() {
 
         titelLabel = new javax.swing.JLabel();
-        iDanleitung = new javax.swing.JLabel();
         svnAnleitung = new javax.swing.JLabel();
         anleitung = new javax.swing.JLabel();
-        iD = new javax.swing.JTextField();
         sVN = new javax.swing.JTextField();
         exitDelete = new javax.swing.JButton();
         patientDelete = new javax.swing.JButton();
@@ -40,8 +44,6 @@ public class Delete extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         titelLabel.setText("Delete Patient:");
-
-        iDanleitung.setText("PatientenID:");
 
         svnAnleitung.setText("Patienten SVN:");
 
@@ -53,9 +55,14 @@ public class Delete extends javax.swing.JDialog {
             }
         });
 
-        exitDelete.setText("Delete");
+        exitDelete.setText("Exit");
+        exitDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitDeleteActionPerformed(evt);
+            }
+        });
 
-        patientDelete.setText("Exit");
+        patientDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-trash-30.png"))); // NOI18N
         patientDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 patientDeleteActionPerformed(evt);
@@ -70,23 +77,21 @@ public class Delete extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(svnAnleitung, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(titelLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(iDanleitung, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(exitDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(patientDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(iD)
-                            .addComponent(sVN, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(anleitung)
-                        .addGap(0, 2, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(patientDelete)
-                        .addGap(18, 18, 18)
-                        .addComponent(exitDelete)))
-                .addContainerGap())
+                            .addComponent(titelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(svnAnleitung, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(2, 2, 2)
+                                    .addComponent(sVN))
+                                .addComponent(anleitung)))
+                        .addContainerGap(12, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,20 +100,14 @@ public class Delete extends javax.swing.JDialog {
                 .addComponent(titelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41)
                 .addComponent(anleitung)
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iDanleitung, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(svnAnleitung, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sVN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 65, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(exitDelete)
-                    .addComponent(patientDelete))
+                .addGap(72, 72, 72)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(patientDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exitDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -121,8 +120,25 @@ public class Delete extends javax.swing.JDialog {
 
     private void patientDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientDeleteActionPerformed
         // TODO add your handling code here:
-        dispose();
+        try {
+            String url = ("jdbc:mysql://localhost:3306/patientenliste?"
+                    + "user=root&password=root");
+            Connection con = DriverManager.getConnection(url);
+            String value = sVN.getText().toString();      
+            String query = "Delete from patienten where SVN= " + value;
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Deleted sucessfully!");
+            
+        }catch(SQLException ex){
+        
+        }
     }//GEN-LAST:event_patientDeleteActionPerformed
+
+    private void exitDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitDeleteActionPerformed
+        // TODO add your handling code here:
+    dispose();
+    }//GEN-LAST:event_exitDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,8 +185,6 @@ public class Delete extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel anleitung;
     private javax.swing.JButton exitDelete;
-    private javax.swing.JTextField iD;
-    private javax.swing.JLabel iDanleitung;
     private javax.swing.JButton patientDelete;
     private javax.swing.JTextField sVN;
     private javax.swing.JLabel svnAnleitung;

@@ -5,40 +5,23 @@
  */
 package kaschmed;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Francesca Kaschnig
  */
 public class newPatient extends javax.swing.JDialog {
-    
-    Benutzeroberflaeche flaeche = new Benutzeroberflaeche ();
-    
-    
-    
-    
-    public void studentenanlegen(String vorname, String nachname, int iD, int telefonNr, int sVN, String geschlecht){
-        try {
-            boolean vorhanden = false;
-            
-            vorhanden = query1.containsKey(nummer);
-            
-            
-            if (vorhanden == false) {
-                
-                Patient newpat = new Patient(String vorname, String nachname, int iD, int telefonNr, int sVN, String geschlecht);
-                meineTM.put(nummer, newstud);
-                System.out.println("Der Student : " + newstud + "mit der Matrikelnummer: " + nummer + "wurde hinzugefügt!");
-            } else if (vorhanden == true) {
-                throw new MyExceptions(Enum.SCHONVORHANDEN, "Die Matrikelnummer ist bereits vergeben!");
 
-            }
-        } catch (MyExceptions a) {
-            switch (a.x) {
-                case SCHONVORHANDEN:
-                    System.out.println("Die Matrikelnummer ist schon vorhanden!");
-            }
-        }
-    }
+    String geschlecht;
 
     /**
      * Creates new form newPatient
@@ -57,13 +40,13 @@ public class newPatient extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jLabel1 = new javax.swing.JLabel();
         titelTitel = new javax.swing.JLabel();
         angabe = new javax.swing.JLabel();
-        patientenID = new javax.swing.JLabel();
         neuerVorname = new javax.swing.JLabel();
         neuerNachname = new javax.swing.JLabel();
         neueSVN = new javax.swing.JLabel();
-        patientID = new javax.swing.JTextField();
         patientVN = new javax.swing.JTextField();
         patientNN = new javax.swing.JTextField();
         patientSVN = new javax.swing.JTextField();
@@ -72,6 +55,10 @@ public class newPatient extends javax.swing.JDialog {
         neuesGeschlecht = new javax.swing.JLabel();
         maennlich = new javax.swing.JRadioButton();
         weiblich = new javax.swing.JRadioButton();
+        neueTelefonnummer = new javax.swing.JLabel();
+        telefonNummer = new javax.swing.JTextField();
+
+        jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -79,17 +66,15 @@ public class newPatient extends javax.swing.JDialog {
 
         angabe.setText("Bitte füllen Sie alle Felder aus!");
 
-        patientenID.setText("PatientenID:");
-
         neuerVorname.setText("Vorname:");
 
         neuerNachname.setText("Nachname:");
 
         neueSVN.setText("SVN:");
 
-        patientID.addActionListener(new java.awt.event.ActionListener() {
+        patientVN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                patientIDActionPerformed(evt);
+                patientVNActionPerformed(evt);
             }
         });
 
@@ -121,6 +106,7 @@ public class newPatient extends javax.swing.JDialog {
 
         neuesGeschlecht.setText("Geschlecht:");
 
+        buttonGroup1.add(maennlich);
         maennlich.setText("männlich");
         maennlich.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,12 +114,15 @@ public class newPatient extends javax.swing.JDialog {
             }
         });
 
+        buttonGroup1.add(weiblich);
         weiblich.setText("weiblich");
         weiblich.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 weiblichActionPerformed(evt);
             }
         });
+
+        neueTelefonnummer.setText("Telefonnummer:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -155,18 +144,7 @@ public class newPatient extends javax.swing.JDialog {
                                             .addComponent(addPatient))
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(neueSVN, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(patientSVN, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(patientenID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(neuerVorname, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(neuerNachname, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(patientVN, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(patientID, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(patientNN, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addGap(268, 268, 268))))
                                 .addGap(0, 10, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
@@ -175,7 +153,24 @@ public class newPatient extends javax.swing.JDialog {
                         .addComponent(maennlich)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(weiblich)
-                        .addGap(52, 52, 52))))
+                        .addGap(52, 52, 52))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(patientSVN, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(neueTelefonnummer, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(telefonNummer))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(neuerVorname, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(patientVN, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(neuerNachname, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(patientNN, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,28 +179,28 @@ public class newPatient extends javax.swing.JDialog {
                 .addComponent(titelTitel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(angabe, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(patientenID)
-                    .addComponent(patientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neuerVorname)
                     .addComponent(patientVN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(patientNN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(neuerNachname))
-                .addGap(24, 24, 24)
+                    .addComponent(neuerNachname)
+                    .addComponent(patientNN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(neueTelefonnummer)
+                    .addComponent(telefonNummer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neuesGeschlecht)
                     .addComponent(maennlich)
                     .addComponent(weiblich))
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(neueSVN, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(patientSVN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(neueSVN)
+                    .addComponent(patientSVN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addPatient)
                     .addComponent(exitAdd))
@@ -236,27 +231,38 @@ public class newPatient extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_maennlichActionPerformed
 
-    private void patientIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_patientIDActionPerformed
-
     private void addPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPatientActionPerformed
-       String id = patientID.getText();
-       if(id.matches("^[\\d]+")){
-       
-       }
-       String vorname = patientVN.getText();
-       String nachname = patientNN.getText();
-       int svn = patientSVN.getColumns();
-       
-       if(maennlich.isSelected()){
-       
-       
-       } else if(weiblich.isSelected()){
-       
-       }
-       
+        // TODO add your handling code here:
+        try {
+            String url = ("jdbc:mysql://localhost:3306/patientenliste?"
+                    + "user=root&password=root");
+            Connection con = DriverManager.getConnection(url);
+            String query = "insert into patienten(Vornamen, Nachname, SVN, Geschlecht, Telefonnummer) values(?,?,?,?,?) ";
+            PreparedStatement pst = con.prepareStatement(query);
+           
+            pst.setString(1, patientVN.getText());
+            pst.setString(2, patientNN.getText());
+            pst.setString(3, patientSVN.getText());
+            if (maennlich.isSelected()) {
+                geschlecht = "m";
+            }
+            if (weiblich.isSelected()) {
+                geschlecht = "w";
+            }
+            pst.setString(4, geschlecht);
+            pst.setString(5, telefonNummer.getText());
+            
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Inserted sucessfully!");
+
+        }catch (SQLException ex) {
+            Logger.getLogger(newPatient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addPatientActionPerformed
+
+    private void patientVNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientVNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_patientVNActionPerformed
 
     /**
      * @param args the command line arguments
@@ -303,17 +309,19 @@ public class newPatient extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPatient;
     private javax.swing.JLabel angabe;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton exitAdd;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JRadioButton maennlich;
     private javax.swing.JLabel neueSVN;
+    private javax.swing.JLabel neueTelefonnummer;
     private javax.swing.JLabel neuerNachname;
     private javax.swing.JLabel neuerVorname;
     private javax.swing.JLabel neuesGeschlecht;
-    private javax.swing.JTextField patientID;
     private javax.swing.JTextField patientNN;
     private javax.swing.JTextField patientSVN;
     private javax.swing.JTextField patientVN;
-    private javax.swing.JLabel patientenID;
+    private javax.swing.JTextField telefonNummer;
     private javax.swing.JLabel titelTitel;
     private javax.swing.JRadioButton weiblich;
     // End of variables declaration//GEN-END:variables
