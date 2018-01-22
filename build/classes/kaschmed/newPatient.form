@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="angabe" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="titelTitel" min="-2" pref="116" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="exitAdd" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="addPatient" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="neueSVN" min="-2" pref="102" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="patientSVN" min="-2" pref="264" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="patientenID" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                                          <Component id="neuerVorname" alignment="0" min="-2" pref="80" max="-2" attributes="0"/>
+                                          <Component id="neuerNachname" alignment="0" min="-2" pref="80" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="patientVN" min="-2" pref="264" max="-2" attributes="0"/>
+                                          <Component id="patientID" min="-2" pref="264" max="-2" attributes="0"/>
+                                          <Component id="patientNN" alignment="0" min="-2" pref="264" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="neuesGeschlecht" min="-2" pref="102" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                      <Component id="maennlich" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="weiblich" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="titelTitel" min="-2" pref="30" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="angabe" min="-2" pref="21" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="patientenID" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="patientID" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="neuerVorname" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="patientVN" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="patientNN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="neuerNachname" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="neuesGeschlecht" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="maennlich" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="weiblich" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="neueSVN" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="patientSVN" alignment="1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="7" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="addPatient" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="exitAdd" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="titelTitel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Patient anlegen:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="angabe">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Bitte f&#xfc;llen Sie alle Felder aus!"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="patientenID">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="PatientenID:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="neuerVorname">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vorname:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="neuerNachname">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nachname:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="neueSVN">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="SVN:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="patientID">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="patientIDActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="patientVN">
+    </Component>
+    <Component class="javax.swing.JTextField" name="patientNN">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="patientNNActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="patientSVN">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="patientSVNActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="addPatient">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addPatientActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="exitAdd">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Exit"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exitAddActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="neuesGeschlecht">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Geschlecht:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="maennlich">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="m&#xe4;nnlich"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maennlichActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="weiblich">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="weiblich"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="weiblichActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>
